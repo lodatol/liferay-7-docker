@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  liferay:
+    build: .
+    labels:
+      tier: tomcat
+      app: liferay
+    environment:
+      CATALINA_OPTS: -d64 -server -XX:NewSize=700m -XX:MaxNewSize=700m -Xms3G -Xmx3G -Dfile.encoding=UTF8 -Djava.net.preferIPv4Stack=true -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false -Duser.timezone=GMT
+    ports:
+      - 8080:8080
+    volumes:
+      - document-library:/srv/http/liferay/data/document_library:delegated
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis
+    labels:
+      tier: data
+      app: liferay
+
+  postgres:
+    image: postgres:9.6
+    labels:
+      tier: data
+      app: liferay
+    environment:
+      POSTGRES_INITDB_ARGS: --encoding UNICODE --locale C --lc-collate C --lc-ctype C
+      POSTGRES_USER: liferay
+      POSTGRES_PASSWORD: liferay
+    volumes:
+      - db-data:/var/lib/postgresql/data:delegated
+
+volumes:
+  db-data:
+  document-library:

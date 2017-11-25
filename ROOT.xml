@@ -1,0 +1,45 @@
+<Context crossContext="true" path="">
+
+    <!-- JAAS -->
+
+    <!--<Realm
+        className="org.apache.catalina.realm.JAASRealm"
+        appName="PortalRealm"
+        userClassNames="com.liferay.portal.kernel.security.jaas.PortalPrincipal"
+        roleClassNames="com.liferay.portal.kernel.security.jaas.PortalRole"
+    />-->
+
+    <!--
+    Uncomment the following to disable persistent sessions across reboots.
+    -->
+
+    <!--<Manager pathname="" />-->
+
+    <!--
+    Uncomment the following to not use sessions. See the property
+    "session.disabled" in portal.properties.
+    -->
+
+    <!--<Manager className="com.liferay.support.tomcat.session.SessionLessManagerBase" />-->
+    <Manager className="de.javakaffee.web.msm.MemcachedBackupSessionManager"
+        memcachedNodes="redis://redis"
+        sticky="false"
+        sessionBackupAsync="false"
+        lockingMode="auto"
+        requestUriIgnorePattern=".*\.(ico|png|gif|jpg|css|js)$"
+    />
+    <Resource name="jdbc/LiferayPool" auth="Container"
+        type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+        url="jdbc:postgresql://postgres/liferay"
+        username="liferay" password="liferay"
+        maxActive="200" maxIdle="50" minIdle="50" initialSize="50" maxWait="10000"
+    />    
+    <Resources>
+        <PreResources
+            className="com.liferay.support.tomcat.webresources.ExtResourceSet"
+            base="${catalina.base}/lib/ext/portal"
+            webAppMount="/WEB-INF/lib"
+        />
+    </Resources>
+
+</Context>
