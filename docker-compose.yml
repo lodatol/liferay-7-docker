@@ -2,7 +2,7 @@ version: '3'
 
 services:
   liferay:
-    build: .
+    image: lodatol/liferay-7-docker
     labels:
       tier: tomcat
       app: liferay
